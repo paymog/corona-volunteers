@@ -1,13 +1,25 @@
 import datetime
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
 def root():
-    return "hello world"
+    return jsonify("hello world"), 200
+
+
+@app.after_request
+def after_request(response):
+    # Needed to simplify CORS
+    # TODO don't have this when we go to prod
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 
 
 if __name__ == '__main__':
