@@ -9,7 +9,7 @@ CORS(app)
 
 @app.route('/api/')
 def root():
-    return jsonify("hello world"), 200
+    return jsonify("hello world from GAE"), 200
 
 
 @app.after_request
