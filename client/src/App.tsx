@@ -1,7 +1,6 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {type} from "os";
 
 type Props = {
 
@@ -14,12 +13,8 @@ type AppState = {
 class App extends React.Component<Props>{
   state: AppState = { result: ''};
 
-  constructor(props: Readonly<Props>) {
-    super(props);
-  }
-
   componentDidMount(): void {
-    fetch('http://localhost:8080/').then(res => res.json())
+    fetch('http://localhost:8080/api').then(res => res.json())
       .then(
         (result) => {
           console.log(result);

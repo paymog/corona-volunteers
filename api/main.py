@@ -7,7 +7,7 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/')
+@app.route('/api/')
 def root():
     return jsonify("hello world"), 200
 
