@@ -13,7 +13,7 @@ type Props = {}
 type AppState = {
   result: string
   token?: string
-  user?: any
+  user?: firebase.User
 }
 
 class App extends React.Component<Props> {
@@ -28,34 +28,26 @@ class App extends React.Component<Props> {
     this.registerFirebaseAuthListener();
 
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
-    let currentUser = firebase.auth().currentUser;
-
-    if (currentUser) {
-    }
   }
 
   registerFirebaseAuthListener(): void {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
-        console.log('user ' + user + ' is logged in');
         this.setState({user});
 
         user.getIdToken().then((idToken) => {
 
-          console.log('user id token is ' + idToken);
           this.setState({token: idToken})
         });
 
       } else {
-        console.log('user logged out');
-        this.setState({user: null})
+        this.setState({user: null});
+
         var uiConfig = {
           'signInSuccessUrl': '/',
           'signInOptions': [
             firebase.auth.EmailAuthProvider.PROVIDER_ID
           ],
-          // Terms of service url
-          'tosUrl': '<your-tos-url>',
         };
         if (this.ui) {
           this.ui.start('#firebaseui-auth-container', uiConfig);
@@ -65,13 +57,9 @@ class App extends React.Component<Props> {
     });
   }
 
-  // Firebase log-in widget
-  configureFirebaseLoginWidget() {
-  }
 
 
   componentDidMount(): void {
-    this.configureFirebaseLoginWidget();
     analytics.logEvent('component mounted!');
 
     fetch('http://localhost:8080/api').then(res => res.json())
@@ -100,6 +88,7 @@ class App extends React.Component<Props> {
       authDiv = <div id='firebaseui-auth-container'></div>
     } else {
       authDiv = <div>
+        <p>Hello {this.state.user?.displayName}</p>
         <LogoutButton/>
       </div>
     }
