@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from "react-redux";
+import {login, logout} from "./redux/actions";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -13,18 +16,31 @@ import * as firebase from 'firebase';
 import {analytics} from './firebase'
 import * as firebaseui from 'firebaseui'
 import {LogoutButton} from './components/logout'
-import {TopUsers} from "./components/topUsers";
+import TopUsers from "./components/topUsers";
 
 
-type Props = {}
+type Props = {
+  login: any,
+  logout: any
+}
 
 type AppState = {
   result: string
   token?: string
-  user?: firebase.User
+  user?: firebase.User | null
+  error?: any
+}
+function mapStateToProps(state: any) {
+  return {token: state.token}
+}
+function mapDispatchToProps(dispatch: any) {
+  return {
+    login: (token:string) => dispatch(login(token)),
+    logout: () => dispatch(logout)
+  }
 }
 
-class App extends React.Component<Props> {
+class App extends React.Component<Props, AppState> {
   state: AppState = {result: ''};
   ui: firebaseui.auth.AuthUI | undefined;
 
@@ -38,6 +54,7 @@ class App extends React.Component<Props> {
     this.ui = new firebaseui.auth.AuthUI(firebase.auth());
   }
 
+
   registerFirebaseAuthListener(): void {
     firebase.auth().onAuthStateChanged(user => {
       if (user) {
@@ -45,7 +62,7 @@ class App extends React.Component<Props> {
 
         user.getIdToken().then((idToken) => {
 
-          this.setState({token: idToken})
+          this.props.login(idToken)
         });
 
       } else {
@@ -121,4 +138,4 @@ class App extends React.Component<Props> {
 
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);

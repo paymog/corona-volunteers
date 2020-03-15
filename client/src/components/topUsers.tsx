@@ -1,17 +1,44 @@
 import React from 'react';
+import { connect } from "react-redux";
 
 type TopUsersConfig = {}
 
-type State = {
-  result?: any
+type Props = {
+  token?: string
 }
 
-export class TopUsers extends React.Component<TopUsersConfig> {
+type State = {
+  result?: any
+  error?: any
+  token: string
+}
 
-  state: State = {};
+function mapStateToProps(state: any) {
+  return {token: state.token}
+}
+
+class TopUsers extends React.Component<Props, State> {
+
+  state: State = { token: ''};
 
   componentDidMount(): void {
-    fetch('http://localhost:8080/api/top_users').then(res => res.json())
+    console.log(this.props.token);
+    this.getTopUsers()
+  }
+
+  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+    if (prevProps.token !== this.props.token) {
+      this.getTopUsers()
+    }
+  }
+
+  getTopUsers(): void {
+
+    fetch('http://localhost:8080/api/top_users', {
+      headers: {
+        'Authorization': 'Bearer ' + this.props.token
+      }
+    }).then(res => res.json())
       .then(
         (result) => {
           console.log(result);
@@ -29,6 +56,7 @@ export class TopUsers extends React.Component<TopUsersConfig> {
           });
         }
       )
+
   }
 
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
@@ -41,3 +69,5 @@ export class TopUsers extends React.Component<TopUsersConfig> {
 
   }
 }
+
+export default connect(mapStateToProps, null)(TopUsers)
