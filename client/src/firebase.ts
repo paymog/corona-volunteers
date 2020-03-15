@@ -1,3 +1,5 @@
+// these configs have been invalidated and ignored on paymahn's machine with https://stackoverflow.com/questions/4348590/how-can-i-make-git-ignore-future-revisions-to-a-file
+
 import * as firebase from 'firebase';
 
 let config = {
