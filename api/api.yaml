@@ -1,2 +1,7 @@
 runtime: python37
 service: api
+
+env_variables:
+  # Replace with your Firebase project ID.
+  FIREBASE_PROJECT_ID: '<PROJECT_ID>'
+
