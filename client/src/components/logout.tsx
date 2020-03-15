@@ -1,6 +1,7 @@
 import * as firebase from "firebase";
 import '../App.css';
 import React from 'react';
+import Button from '@material-ui/core/Button'
 
 
 
@@ -20,7 +21,7 @@ export class LogoutButton extends React.Component<LogoutButtonProps>{
 
   render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
     return (
-      <button onClick={this.logOut}>Log Out</button>
+      <Button onClick={this.logOut}>Log Out</Button>
     )
   }
 
