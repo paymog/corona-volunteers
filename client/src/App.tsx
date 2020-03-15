@@ -1,4 +1,11 @@
 import React from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 import logo from './logo.svg';
 import './App.css';
 
@@ -6,6 +13,7 @@ import * as firebase from 'firebase';
 import {analytics} from './firebase'
 import * as firebaseui from 'firebaseui'
 import {LogoutButton} from './components/logout'
+import {TopUsers} from "./components/topUsers";
 
 
 type Props = {}
@@ -43,8 +51,9 @@ class App extends React.Component<Props> {
       } else {
         this.setState({user: null});
 
+
         var uiConfig = {
-          'signInSuccessUrl': '/',
+          'signInSuccessUrl': '/app',
           'signInOptions': [
             firebase.auth.EmailAuthProvider.PROVIDER_ID
           ],
@@ -96,20 +105,16 @@ class App extends React.Component<Props> {
       <div className="App">
         <p>{this.state.result}</p>
         {authDiv}
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo"/>
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <Router>
+          <Switch>
+            <Route path='/'></Route>
+          </Switch>
+          <Switch>
+            <Route path='/app'>
+              <TopUsers />
+            </Route>
+          </Switch>
+        </Router>
       </div>
     );
   }

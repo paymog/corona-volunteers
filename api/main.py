@@ -1,6 +1,8 @@
 import datetime
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
+import google
+from google.oauth2.id_token import verify_firebase_token
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -10,6 +12,20 @@ CORS(app)
 @app.route('/api/')
 def root():
     return jsonify("hello world from GAE"), 200
+
+
+
+@app.route('/api/top_users')
+def top_users():
+    if 'Authorization' in request.headers:
+        id_token = request.headers['Authorization'].split(' ').pop()
+
+        claims = verify_firebase_token(
+            id_token, request)
+        if not claims:
+            return 'Unauthorized', 401
+
+    return jsonify([{'name': 'bob'}, {'name': 'jim'}])
 
 
 @app.after_request
